@@ -3,27 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy Service Name</title>
+    <title>MdpGen</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
+            box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 15px;
+            width: 100%; /* Assure que la largeur de la ligne est pleine */
+            box-sizing: border-box; /* Inclut les marges et les bordures dans la largeur totale */
+        }
+
+        label {
+            margin-right: 10px;
+            min-width: 150px; /* Réduit la largeur minimale pour s'ajuster au conteneur */
+            color: #555;
+            font-weight: bold;
+            text-align: right; /* Aligne le texte à droite pour les labels */
+        }
+
+        .input-group {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        input {
+            width: calc(100% - 40px); /* Réduit la largeur pour laisser de l'espace pour le bouton */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #007bff;
+            padding: 5px;
+            z-index: 1; /* Assure que le bouton reste au-dessus du champ de texte */
+            transition: color 0.3s;
+        }
+        
+        
+        
+        
+        .copy-button {
+            width: 100%; /* Étend le bouton sur toute la largeur du conteneur */
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            margin: 20px 0 0; /* Ajoute de l'espace en haut, pas besoin de centrer horizontalement */
+            display: block; /* Assure que le bouton occupe la largeur définie */
+        }
+
+
+        .copy-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        
+        
+
+        .toggle-password:hover {
+            color: #0056b3;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
     <script>
-        function copyServiceName() {
+        function copyPassword() {
             const serviceName = document.getElementById("serviceName");
             serviceName.select();
             serviceName.setSelectionRange(0, 99999); // Pour les appareils mobiles
             document.execCommand("copy");
+        }
 
-            alert("Service Name copié: " + serviceName.value);
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleButton = document.getElementById("togglePassword");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleButton.textContent = "👁️"; // Emoji pour "montrer"
+            } else {
+                passwordField.type = "password";
+                toggleButton.textContent = "👁️‍🗨️"; // Emoji pour "cacher"
+            }
         }
     </script>
 </head>
 <body>
-    <h2>Formulaire de Service</h2>
-    
-    <label for="serviceName">Service Name:</label>
-    <input type="text" id="serviceName" name="serviceName"><br><br>
-    
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br><br>
-    
-    <button onclick="copyServiceName()">Copier le Service Name</button>
+    <div class="container">
+        <h2>MdpGen</h2>
+        
+        <div class="form-group">
+            <label for="serviceName">Nom du service :</label>
+            <input type="text" id="serviceName" name="serviceName">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Code secret :</label>
+            <div class="input-group">
+                <input type="password" id="password" name="password">
+                <button id="togglePassword" class="toggle-password" onclick="togglePassword()">👁️‍🗨️</button>
+            </div>
+        </div>
+        
+        <button class="copy-button" onclick="copyPassword()">Copier le nom du service</button>
+    </div>
 </body>
 </html>
