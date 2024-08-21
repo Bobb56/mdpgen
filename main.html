@@ -1,1 +1,29 @@
-Truc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy Service Name</title>
+    <script>
+        function copyServiceName() {
+            const serviceName = document.getElementById("serviceName");
+            serviceName.select();
+            serviceName.setSelectionRange(0, 99999); // Pour les appareils mobiles
+            document.execCommand("copy");
+
+            alert("Service Name copié: " + serviceName.value);
+        }
+    </script>
+</head>
+<body>
+    <h2>Formulaire de Service</h2>
+    
+    <label for="serviceName">Service Name:</label>
+    <input type="text" id="serviceName" name="serviceName"><br><br>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    
+    <button onclick="copyServiceName()">Copier le Service Name</button>
+</body>
+</html>
