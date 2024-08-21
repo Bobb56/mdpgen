@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MdpGen</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>
     <style>
         body {
             display: flex;
@@ -58,7 +59,7 @@
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 16px;
             box-sizing: border-box; /* Inclut le padding dans la largeur totale */
         }
 
@@ -82,10 +83,11 @@
             z-index: 1; /* Assure que le bouton reste au-dessus du champ de texte */
             transition: color 0.3s;
         }
-        
-        
-        
-        
+
+        .toggle-password:hover {
+            color: #0056b3;
+        }
+
         .copy-button {
             width: 100%; /* Étend le bouton sur toute la largeur du conteneur */
             padding: 10px;
@@ -100,17 +102,9 @@
             display: block; /* Assure que le bouton occupe la largeur définie */
         }
 
-
         .copy-button:hover {
             background-color: #0056b3;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        
-        
-
-        .toggle-password:hover {
-            color: #0056b3;
         }
 
         button {
@@ -129,12 +123,137 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
     </style>
-    <script>
-        function copyPassword() {
-            const serviceName = document.getElementById("serviceName");
-            serviceName.select();
-            serviceName.setSelectionRange(0, 99999); // Pour les appareils mobiles
-            document.execCommand("copy");
+    <script type="text/javascript">
+        async function getCalcMdpResult(site, cle) {
+            // Load Pyodide
+            let pyodide = await loadPyodide();
+
+            // Python code to run
+            const pythonCode = `
+specs = ['!', '@', '#', '$', '%', '&', '*', '-', '_', '/']
+minus = [chr(i) for i in range(97,123)]
+chiffres = [chr(i) for i in range(48,58)]
+majus = [chr(i) for i in range(65,91)]
+
+chars = minus + majus + chiffres + specs
+
+P=82589933
+
+def inter(liste, mot):
+    for i in mot:
+        if i in liste:
+            return True
+    return False
+
+def div(a,b):
+    return (a-(a%b))//b
+
+def compute_p(site):
+    l=len(chars)
+    p=0
+    for i in site:
+        p = p*P + i
+    return p
+
+def complete(str1, str2): # complete str1 de la longueur str2
+    r = ""
+    t = list(str1) ; t.reverse() ; t = "".join(t)
+    while len(str1) < len(str2):
+        str1+=t
+    return str1[0:len(str2)]
+
+def mdp(site, cle):
+    l=len(chars)
+    site=complete(site, cle) # on fait en sorte que site et cle aient la même longueur
+    site2 = []
+    for i in site:
+        site2.append(chars.index(i)+1)
+    site = site2
+    p1=compute_p(site) # calcul d'un nombre propre à site
+    cle2 = []
+    for i in cle:
+        cle2.append(chars.index(i)+1)
+    cle = cle2
+    p2=compute_p(cle)
+    l1 = []
+    l2 = []
+    for i in site:
+        l1.append(div(p2, i) + (p1%11)*(p2%i))
+    for i in cle:
+        l2.append(div(p1, i) + (p2%11)*(p1%i))
+    l12=sorted(l1) # trie site modif
+    nl2=[0 for i in cle] # nouvelle l2 permutée
+    for i in range(len(cle)):
+        nl2[i] = l2[l1.index(l12[i])] # on prend l'élément i de la liste l1 triée, on regarde son ancienne place dans l1, et l'élément de cette ancienne place dans la liste l2 va dans nl2[i]
+    nl=[]
+    for k in range(len(l1)):
+        i = l1[k]
+        j = nl2[k]
+        nl.append(i+j + (i+j)*l)
+    somme = 0
+    for i in range(len(nl)):
+        somme += nl[i]
+        nl[i] = somme
+    for i in range(len(nl)):
+        nl[i] = chars[nl[i]%l]
+    res = ""
+    for i in nl:
+        res += str(i)
+    return res
+
+def iter_mdp(site, cle, n):
+    for i in range(n):
+        cle=mdp(site, cle)
+    return cle
+
+def correction(mot):
+    if not inter(specs, mot):
+        mot += '/'
+    if not inter(minus, mot):
+        mot += 'a'
+    if not inter(majus, mot):
+        mot += 'A'
+    if not inter(chiffres, mot):
+        mot += '0'
+    return mot
+
+def calc_mdp(site, cle):
+    _1=iter_mdp(cle, site, len(site))
+    _2=iter_mdp(site,cle,len(cle))
+    cle0=mdp(_1,_2)
+    site0=mdp(_2,_1)
+    mot = iter_mdp(site0, cle0, len(site0)+len(cle0))
+    return correction(mot) # au cas où
+
+# Get the result of calc_mdp with site and cle
+site = "${site}"
+cle = "${cle}"
+result = calc_mdp(site, cle)
+result
+            `;
+
+            // Replace the placeholders with the actual values
+            const filledCode = pythonCode
+                .replace(/\${site}/g, site)
+                .replace(/\${cle}/g, cle);
+
+            // Run Python code
+            let result = await pyodide.runPythonAsync(filledCode);
+            return result;
+        }
+
+
+    
+        async function copyPassword() {
+            const site = document.getElementById("serviceName").value;
+            const cle = document.getElementById("password").value;
+            console.log(site);
+            console.log(cle);
+            const passwd = await getCalcMdpResult(site, cle);
+            console.log(passwd);
+            
+            await navigator.clipboard.writeText(passwd)
+            
         }
 
         function togglePassword() {
@@ -156,7 +275,17 @@
         
         <div class="form-group">
             <label for="serviceName">Nom du service :</label>
-            <input type="text" id="serviceName" name="serviceName">
+            <input type="text" id="serviceName" name="serviceName" list="services">
+            <datalist id="services">
+                <option value="Gmail">
+                <option value="Facebook">
+                <option value="Twitter">
+                <option value="Instagram">
+                <option value="LinkedIn">
+                <option value="Yahoo">
+                <option value="Outlook">
+                <!-- Ajoutez d'autres services ici -->
+            </datalist>
         </div>
 
         <div class="form-group">
@@ -167,7 +296,7 @@
             </div>
         </div>
         
-        <button class="copy-button" onclick="copyPassword()">Copier le nom du service</button>
+        <button class="copy-button" onclick="copyPassword()">Copier le mot de passe dans le presse-papiers</button>
     </div>
 </body>
 </html>
