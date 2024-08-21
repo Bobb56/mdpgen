@@ -26,6 +26,33 @@
             max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
             box-sizing: border-box; /* Inclut le padding dans la largeur totale */
         }
+        
+        
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            width: 40px; /* Ajuste la taille de l'image */
+            height: 40px;
+            margin-right: 10px; /* Espacement entre l'image et le titre */
+        }
+        
+        .header .title {
+            flex: 1; /* Prend tout l'espace restant */
+            text-align: center; /* Centre le texte */
+        }
+
+        .header h2 {
+            color: #333;
+            margin: 0;
+        }
+        
+        
+        
 
         h2 {
             text-align: center;
@@ -259,32 +286,40 @@
 
         function togglePassword() {
             const passwordField = document.getElementById("password");
-            const toggleButton = document.getElementById("togglePassword");
+            const image = document.getElementById('oeil');
             if (passwordField.type === "password") {
                 passwordField.type = "text";
-                toggleButton.textContent = "👁️"; // Emoji pour "montrer"
+                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAYAAACKsM07AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAOESURBVEhLfVXNT1NZFP/1taWPUqDASGqpkxGiDbENJC4UialfsGBinLhQZ5LRjTtXLnRjXKBb/4BJXJpJTCTRBAiLRqh8JAqICRgNZtoZayXEfkxpKRSQ97zn9D7pYzr8kpt37rn3/O49X/dZsAdmZmb2Ly8vJ3w+n+L1euF0OmGz2VAsFrGysoJoNIrNzU34/f4nra2tl6QZdAGLZQ/q2dlZ+9DQkJZOp2nvntje3tYXFxf14eFhmrqFub5rmBGJRC4tLS2x8W6sfFnWP394L0i/Ss0OhGmlAZMfIyMjF0Kh0LPq6mqpAdKJjxh79BB/vX6JtVyWdVYRphb/ERz/5QoCoR78TzhY+X1lbGzMHQwG/21qapIaIDr3Cn/evYmvW5tSY8b98GspmTE4OIje3t6Iw+E4rUgdJTBdTp5LfcHje7eZ/EB7EBdv98Pt8crVyuQUKRrd3d2Ux1Oapp3nhYGBgXOUrHI8fdCv3+05yiOXTrJu4kVE/+mAr1Ks9WIhz3sMjI+P61Qk7IE4MZzNZvl0gq5peDc5yjLh3dsF/p4MncI/nxIsGxAX4BF7Mys1JXR1dWF+fh7K5OSkl0KzsbGBQqHAi4VsBsXCKsuE336/WjGR144fkRKQjP8tpRKoX+jCimiU/YZxPp/nxrEo31PDsY7FzbcWjcdDOszQtW0p7UBVVSiNjY3i8ht8IiGTycCmOqHWuComkogJqtUCr6uKZcK+Hw9KaQfEpXR0dLxfWFhAfX09K8ktVfTBnWcveF4Og7xKOHjG54ZdelqlVqPt6DGWDaytraG5ubnUB1NTU4vt7e2HKVQNDQ28oRyUREK6uIUtTccPDhts1p0w/nzjFo5duCxnJYTDYeoFi1FF/omJiYrk/X1dUgKaVDs8zioTece5PgR7ziOXy0GUJedwenqaHkBeZw+obndXiXiP+Jv5HMfzPx4gtatKrHY7Tvx6HYGzfTwne5FPxONxrshAIMCElkrklByqALqV6EbOS0a8SamPURTzOew7eAjNYtgcDt5Pe+vq6hCLxdgDg5xAQlmxlTwaHR3VKemdnZ389q+vr7NhORSRYCJ2uVx847m5OYh/AlpaWky3LT/AtJBIJHTqRGrCtrY2JioHeZZKpZBMJuF2u2mPyd6AEaKKi4TV1dUt8Vez0R+MYLVaUVNTg9raWng8nv/YCTpF0GmlGfANkzPziGP+GwcAAAAASUVORK5CYII=";
             } else {
                 passwordField.type = "password";
-                toggleButton.textContent = "👁️‍🗨️"; // Emoji pour "cacher"
+                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAYAAACKsM07AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAPTSURBVEhLhZVfTNtVFMe//f+HAqVIxQIawKUxtrFGgkOi+KfU2A3/Jc5poi/ucS9Gs+jDsrhXfPNlib6YxcQoD2ZCQJsVEkbiADsFM2WxmNUOcfQfpS1tof15z+mFHzDmPknTe8+99/y559zz0+B/mJube2B1dTXe3t6udblcsFqt0Ov1KBaLWF9fRzQaRblchtvt/rarq+uEPHZv5ufnDaOjo9VkMqnci0qloiwtLSljY2M0tUsVd2dqaurEysoKHz7I+u1V5daN34XSbSlRKZVKSigUUnK53MdSFbPvisbHx18ZGBj4zmKxSAmQjN/E5MXP8efPP6GQzbBMJ66pzf0ojr56Ep6BQZYR1WoVExMTEDqu2Gy2p0m2a2ByctLu9XrTzc3NUgJEI1fx1dn3sb1VlpI7eTwwhNc+PCdngLgychSBQGDKZDI9p5VySmByr/Js4ja+Pn+GlXc84sXrZz6BvdUlV1Wu/fg9rl76Rs5EdDod+vv7KY/PioiG2MDIyIi/p6dn1xgR/vICSoU8j0+eG4bPfwy9pz7AxT/+xeW/M0gXt3mNCH3xmdibkzOgqamJI0mn05dYqbAYymQyELniDYq4y+tXwjwmrv+2yP+RX37FttgSy5XwQyyFLbGPKBc3sXxtnsc79PX1YWFhAWyArkZUAfL5msf5TArFvOrR2++8i46ODgwPD0sJsFlR8E9ezc1a7C85qkHvhRxmAxpNLdcbGxv8cDTafbe1u34QGTCjVCtypGI2m2sGyHuySKRSKejNVpjrbDwnuhrMcqRi1mngshnlDGh5sFOOVEgXG1hcXERjYyMLKaxUOo0jR5/hOdHjrEer1SBngFGcer7dDoOM1Gi2oPuJJ3m8Q6FQgNPprBkQ5XSD7n/vA/MdfwNGi5XHeq0GLz3kwMudDvHfhDcfbsH9VtX7wfdOw2RVIyZmZmbQ29urYQOiitzT09Ooq6uDwVDz1Oa4D4HTH0FvUBU1mw0iEiP0uprnxGP+ILyDQ8hmsxC9i3M4OztLDZDXd7MnyvRF8ZongsEgRD/hvBCpWzFcvvApEgeqRCcceeqtU/C8EOQ5FYLD4UAsFuOzHo+Hde8rj7W1tfPCyFm/388VQF5Rf+G8iJ6UuBlFcSOLls4jcIqf3mTic7S3oaEBy8vLHMGOcuLQ+guHwwol3efzce/f3Nzkg3vRigSTYtHU2ONIJALxTUBbW9s+nYcaIOLxuEIvkR5hd3c3K9oLRZZIJChq2O122nOorrsa2EHkY0t81fT0BSOomVEx1NeL0m1tveO8uE6tyEethwD4D5KG1mm4wOpjAAAAAElFTkSuQmCC";
             }
         }
     </script>
 </head>
 <body>
     <div class="container">
-        <h2>MdpGen</h2>
+        
+        <div class="header">
+            <img id="logo" src="data:image/png;base64,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" type="image/png" Alt="Logo">
+            
+            <div class="title">
+                <h2>MdpGen</h2>
+            </div>
+        </div>
         
         <div class="form-group">
             <label for="serviceName">Nom du service :</label>
             <input type="text" id="serviceName" name="serviceName" list="services">
             <datalist id="services">
-                <option value="Gmail">
-                <option value="Facebook">
-                <option value="Twitter">
-                <option value="Instagram">
-                <option value="LinkedIn">
-                <option value="Yahoo">
-                <option value="Outlook">
+                <option value="google">
+                <option value="facebook">
+                <option value="twitter">
+                <option value="instagram">
+                <option value="linkedin">
+                <option value="yahoo">
+                <option value="outlook">
+                <option value="tiplanet">
                 <!-- Ajoutez d'autres services ici -->
             </datalist>
         </div>
@@ -293,7 +328,9 @@
             <label for="password">Code secret :</label>
             <div class="input-group">
                 <input type="password" id="password" name="password">
-                <button id="togglePassword" class="toggle-password" onclick="togglePassword()">👁️‍🗨️</button>
+                <button id="togglePassword" class="toggle-password" onclick="togglePassword()">
+                    <img id="oeil" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAYAAACKsM07AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAPTSURBVEhLhZVfTNtVFMe//f+HAqVIxQIawKUxtrFGgkOi+KfU2A3/Jc5poi/ucS9Gs+jDsrhXfPNlib6YxcQoD2ZCQJsVEkbiADsFM2WxmNUOcfQfpS1tof15z+mFHzDmPknTe8+99/y559zz0+B/mJube2B1dTXe3t6udblcsFqt0Ov1KBaLWF9fRzQaRblchtvt/rarq+uEPHZv5ufnDaOjo9VkMqnci0qloiwtLSljY2M0tUsVd2dqaurEysoKHz7I+u1V5daN34XSbSlRKZVKSigUUnK53MdSFbPvisbHx18ZGBj4zmKxSAmQjN/E5MXP8efPP6GQzbBMJ66pzf0ojr56Ep6BQZYR1WoVExMTEDqu2Gy2p0m2a2ByctLu9XrTzc3NUgJEI1fx1dn3sb1VlpI7eTwwhNc+PCdngLgychSBQGDKZDI9p5VySmByr/Js4ja+Pn+GlXc84sXrZz6BvdUlV1Wu/fg9rl76Rs5EdDod+vv7KY/PioiG2MDIyIi/p6dn1xgR/vICSoU8j0+eG4bPfwy9pz7AxT/+xeW/M0gXt3mNCH3xmdibkzOgqamJI0mn05dYqbAYymQyELniDYq4y+tXwjwmrv+2yP+RX37FttgSy5XwQyyFLbGPKBc3sXxtnsc79PX1YWFhAWyArkZUAfL5msf5TArFvOrR2++8i46ODgwPD0sJsFlR8E9ezc1a7C85qkHvhRxmAxpNLdcbGxv8cDTafbe1u34QGTCjVCtypGI2m2sGyHuySKRSKejNVpjrbDwnuhrMcqRi1mngshnlDGh5sFOOVEgXG1hcXERjYyMLKaxUOo0jR5/hOdHjrEer1SBngFGcer7dDoOM1Gi2oPuJJ3m8Q6FQgNPprBkQ5XSD7n/vA/MdfwNGi5XHeq0GLz3kwMudDvHfhDcfbsH9VtX7wfdOw2RVIyZmZmbQ29urYQOiitzT09Ooq6uDwVDz1Oa4D4HTH0FvUBU1mw0iEiP0uprnxGP+ILyDQ8hmsxC9i3M4OztLDZDXd7MnyvRF8ZongsEgRD/hvBCpWzFcvvApEgeqRCcceeqtU/C8EOQ5FYLD4UAsFuOzHo+Hde8rj7W1tfPCyFm/388VQF5Rf+G8iJ6UuBlFcSOLls4jcIqf3mTic7S3oaEBy8vLHMGOcuLQ+guHwwol3efzce/f3Nzkg3vRigSTYtHU2ONIJALxTUBbW9s+nYcaIOLxuEIvkR5hd3c3K9oLRZZIJChq2O122nOorrsa2EHkY0t81fT0BSOomVEx1NeL0m1tveO8uE6tyEethwD4D5KG1mm4wOpjAAAAAElFTkSuQmCC" alt="Montrer/cacher le mot de passe">
+                </button>
             </div>
         </div>
         
