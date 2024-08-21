@@ -1,2 +1,0 @@
-# mdpgen
-Password generator
