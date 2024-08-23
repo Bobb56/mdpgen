@@ -315,7 +315,6 @@
         function save_password() {
             // Chaîne de caractères à enregistrer dans le cookie
             const value = document.getElementById("password").value;
-            console.log(value);
             document.cookie = "password=" + value + "; path=/";
 
             /*// Encodage de la valeur
@@ -369,8 +368,7 @@
             }
         }
         document.addEventListener('DOMContentLoaded', function() {
-            console.log(getCookieValue());
-            document.getElementById("password").value = getCookieValue();
+            document.getElementById("password").value = getCookieValue("password");
         });
         
         
