@@ -174,8 +174,71 @@
             background-color: #0056b3;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        
+        
+        /* Style pour la fenêtre modale */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0, 0, 0, 0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 2px solid #888;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        
     </style>
     <script type="text/javascript">
+        
+        function checkWord(word) {
+            const specs = ['!', '@', '#', '$', '%', '&', '*', '-', '_', '/'];
+            const minus = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i));
+            const chiffres = Array.from({ length: 10 }, (_, i) => String.fromCharCode(48 + i));
+            const majus = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+
+            const chars = [...minus, ...majus, ...chiffres, ...specs];
+            
+            const wordList = word.split("");
+            
+            for (let i=0 ; i < wordList.length ; i++) {
+                if (!chars.includes(wordList[i]))
+                    return false;
+            }
+            
+            
+            return true;
+        }
+        
+        
+        
+        
+        
         async function getCalcMdpResult(site, cle) {
             // Load Pyodide
             let pyodide = await loadPyodide();
@@ -338,29 +401,44 @@
                     button.textContent = "Copier le mot de passe";
                 }, 1000);
             }
-            else {
-                const passwd = await getCalcMdpResult(site, cle);
-                
-                try {
-                    await navigator.clipboard.writeText(passwd);
-                } catch (error) {
-                    button.textContent = "☓ La copie a échoué";
-                    button.style.backgroundColor = "red";
-                    // Modifier la couleur du bouton après 1 secondes
-                    setTimeout(() => {
-                        button.style.backgroundColor = '#007bff';
-                        button.textContent = "Copier le mot de passe";
-                    }, 1000);
-                    alert("Votre mot de passe : " + passwd);
-                }
-                
-                button.textContent = "✓ Copié !";
-                button.style.backgroundColor = "green";
+            else if (!checkWord(site) || !checkWord(cle)) {
+                button.textContent = "☓ Caractère spécial inconnu";
+                button.style.backgroundColor = "red";
                 // Modifier la couleur du bouton après 1 secondes
                 setTimeout(() => {
                     button.style.backgroundColor = '#007bff';
                     button.textContent = "Copier le mot de passe";
                 }, 1000);
+            }
+            else {
+                const passwd = await getCalcMdpResult(site, cle);
+                
+                try {
+                    await navigator.clipboard.writeText(passwd);
+                    
+                    button.textContent = "✓ Copié !";
+                    button.style.backgroundColor = "green";
+                    // Modifier la couleur du bouton après 1 secondes
+                    setTimeout(() => {
+                        button.style.backgroundColor = '#007bff';
+                        button.textContent = "Copier le mot de passe";
+                    }, 1000);
+                }
+                catch (error) {
+                    button.textContent = "☓ La copie a échoué";
+                    button.style.backgroundColor = "red";
+                    // Modifier la couleur du bouton après 2 secondes
+                    setTimeout(() => {
+                        button.style.backgroundColor = '#007bff';
+                        button.textContent = "Copier le mot de passe";
+                    }, 2000);
+                    
+                    // ouverture de la fenêtre modale
+                    const modalText = document.querySelector("#myModal p");
+                    modalText.textContent = passwd;
+                    ouvrirModale();
+                }
+                
             }
             
         }
@@ -379,9 +457,6 @@
                 image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAZCAYAAAArK+5dAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADr8AAA6/ATgFUyQAAAPcSURBVEhL7ZVfTNtVFMe//f+HAqVIxQIawKUxtrFGwSFR/FNqrOK/xDlN9MU97sVoFn1YFveKb74s0RezmBjlwYwQ0GaFhJE4YJ2CmbJYzGqHMPqP0v/Q/rzn9EKBsezB132S5nfuufeeP/ece4t73ON/o5LfQ5mbm3tgdXU12t7ernY4HDCbzdBqtSgUCtjY2EA4HEapVILT6fyhq6vrmNx2d+bn53Wjo6OVeDyu3I1yuawsLS0pY2NjNLRKE3dmamrq2MrKCm8+yMatVeXm9T+E0W2pqVEsFpVAIKBkMpnPpClm3xGNj4+/PjAw8KPJZJIaIB69gcnzX+GvK78gl06xTiOOqc35KI6+cRyugUHWEZVKBRMTExA2LlkslmdIt+tgcnLS6na7k83NzVIDhEOX8e3pj7C9VZKa23ncN4Q3PzkjR4A4MgoUPp9vymAwPK+Weoio43uNp2O38N3ZU2y84xE33jr1OaytDjlb4+rPo7h84Xs5EtlpNOjv76c6PicyGmIHIyMj3p6enl1nRPCbcyjmsiwfPzMMj/cV9J74GOf/XMPFf1JIFrZ5jgh8/aVYm5EjoKmpiTNJJpMX2KjwGEilUhC14gWKOMtrl4IsE9d+X+Rv6NffsC2WRDJF/BRJYEusI0qFPJavzrO8Q19fHxYWFsAO6GhEFyCbrUacTSVQyNYieu/9D9DR0YHh4WGpAfJlBf9ma7VZj/wtpSp0XyhgdqBSVWu9ubnJF0el3ndau/MHkQkzSqUspRpGo7HqgKInj0QikYDWaIaxzsJjoqvBKKUaRo0KDotejoCWBzulVINssYPFxUU0NjayktJKJJM4cvRZHhNP2uvRatbJEaAXu15ot0InM9UbTeh+4imWd8jlcrDb7VUHop2u0/nvvWCeV9+G3mRmWatW4eWHbHit0ya+TXjn4Rbcb65FP/jhSRjMtYyJmZkZ9Pb2qtiB6CLn9PQ06urqoNNVI7XY7oPv5KfQ6mqGmo06kYkeWk01cuIxrx/uwSGk02mIt4trODs7Sw8gz+9WT7TpS+I2T/j9foj3hOtCJG5GcPHcF4gd6BKNCOTpd0/A9aKfx9QINpsNkUiE97pcLra9rz3W19fPCienvV4vdwBFRe8L10W8SbEbYRQ202jpPAK7+GkNBt5HaxsaGrC8vMwZ7BgnDu2/YDCoUNE9Hg+//fl8njfuRS0KTIbFo8YRh0IhiP8EtLW17bN5qAMiGo0qdBPpEnZ3d7OhvVBmsViMsobVaqU1h9q6o4MdxOXbWltb09I/GEGPGTVDfb1o3dbW2/aL41SLelTfEAD/AX911mannbjBAAAAAElFTkSuQmCC";
             }
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById("password").value = getCookieValue("password");
-        });
         
         
     </script>
@@ -428,5 +503,43 @@
         
         <button type="submit" id ="copypassword" title="Copier le mot de passe dans le presse-papiers" class="copy-button" onclick="copyPassword()">Copier le mot de passe</button>
     </div>
+    
+    
+    <!-- Fenêtre modale -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">❌</span>
+            <b>Mot de passe : </b><p></p>
+        </div>
+    </div>
+    
+    <script>
+        // Obtenez l'élément modale
+        const modal = document.getElementById("myModal");
+        const span = document.getElementsByClassName("close")[0];
+
+        // Fonction pour ouvrir la modale
+        function ouvrirModale() {
+            modal.style.display = "block";
+        }
+
+        // Lorsque l'utilisateur clique sur le "X", fermer la modale
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Lorsque l'utilisateur clique en dehors de la modale, fermer la modale
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        
+        
+        // trucs à exécuter à la toute fin
+        document.getElementById("password").value = getCookieValue("password");
+    </script>
+    
 </body>
 </html>
