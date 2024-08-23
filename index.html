@@ -23,7 +23,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 500px; /* Ajustez la largeur maximale selon vos besoins */
+            max-width: 550px; /* Ajustez la largeur maximale selon vos besoins */
             box-sizing: border-box; /* Inclut le padding dans la largeur totale */
         }
         
@@ -83,7 +83,7 @@
         }
 
         input {
-            width: calc(100% - 40px); /* Réduit la largeur pour laisser de l'espace pour le bouton */
+            width: calc(100% - 80px); /* Réduit la largeur pour laisser de l'espace pour le bouton */
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -98,6 +98,7 @@
         }
 
         .toggle-password {
+            margin-right: 40px;
             position: absolute;
             right: 0px;
             top: 50%;
@@ -115,6 +116,29 @@
         .toggle-password:hover {
             color: #0056b3;
         }
+        
+        
+        .save-password {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #007bff;
+            padding: 5px;
+            z-index: 1; /* Assure que le bouton reste au-dessus du champ de texte */
+            transition: color 0.3s;
+        }
+
+        .save-password:hover {
+            color: #0056b3;
+        }
+        
+        
+        
 
         .copy-button {
             width: 100%; /* Étend le bouton sur toute la largeur du conteneur */
@@ -269,32 +293,89 @@
             let result = await pyodide.runPythonAsync(filledCode);
             return result;
         }
+        
+        
+        
+        
+        function getCookieValue() {
+            // Encode le nom du cookie pour correspondre à l'encodage utilisé lors de la définition
+            const encodedName = encodeURIComponent("password") + "=";
+            const cookies = document.cookie.split(';');
+
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.indexOf(encodedName) === 0) {
+                    // Décoder et retourner la valeur du cookie
+                    return decodeURIComponent(cookie.substring(encodedName.length));
+                }
+            }
+            // Retourne une chaîne vide si le cookie n'est pas trouvé
+            return "";
+        }
+        
+        
+        
+        function save_password() {
+            // Chaîne de caractères à enregistrer dans le cookie
+            const value = document.getElementById("password").value;
+            console.log(value);
+
+            // Encodage de la valeur
+            const encodedValue = encodeURIComponent(value);
+
+            // Création du cookie avec les attributs de sécurité
+            document.cookie = "password=" + encodedValue + "; Secure; HttpOnly; SameSite=Strict; path=/";
+            
+        }
 
 
     
         async function copyPassword() {
-            const site = document.getElementById("serviceName").value;
-            const cle = document.getElementById("password").value;
-            console.log(site);
-            console.log(cle);
-            const passwd = await getCalcMdpResult(site, cle);
-            console.log(passwd);
+            // modifie le bouton pendant la copie
+            button = document.getElementById("copypassword");
+            button.textContent = "••• Copie du mot de passe";
             
-            await navigator.clipboard.writeText(passwd)
+            const site = document.getElementById("username").value;
+            const cle = document.getElementById("password").value;
+
+            const passwd = await getCalcMdpResult(site, cle);
+            
+            try {
+              await navigator.clipboard.writeText(passwd);
+            } catch (error) {
+              alert("Votre mot de passe : " + passwd);
+            }
+            
+            button.textContent = "✓ Copié !";
+            button.style.backgroundColor = "green";
+            // Modifier la couleur du bouton après 2 secondes
+            setTimeout(() => {
+                button.style.backgroundColor = '#007bff';
+                button.textContent = "Copier le mot de passe";
+            }, 1000);
             
         }
 
         function togglePassword() {
             const passwordField = document.getElementById("password");
+            const button = document.getElementById("togglePassword");
             const image = document.getElementById('oeil');
             if (passwordField.type === "password") {
                 passwordField.type = "text";
-                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAYAAACKsM07AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAOESURBVEhLfVXNT1NZFP/1taWPUqDASGqpkxGiDbENJC4UialfsGBinLhQZ5LRjTtXLnRjXKBb/4BJXJpJTCTRBAiLRqh8JAqICRgNZtoZayXEfkxpKRSQ97zn9D7pYzr8kpt37rn3/O49X/dZsAdmZmb2Ly8vJ3w+n+L1euF0OmGz2VAsFrGysoJoNIrNzU34/f4nra2tl6QZdAGLZQ/q2dlZ+9DQkJZOp2nvntje3tYXFxf14eFhmrqFub5rmBGJRC4tLS2x8W6sfFnWP394L0i/Ss0OhGmlAZMfIyMjF0Kh0LPq6mqpAdKJjxh79BB/vX6JtVyWdVYRphb/ERz/5QoCoR78TzhY+X1lbGzMHQwG/21qapIaIDr3Cn/evYmvW5tSY8b98GspmTE4OIje3t6Iw+E4rUgdJTBdTp5LfcHje7eZ/EB7EBdv98Pt8crVyuQUKRrd3d2Ux1Oapp3nhYGBgXOUrHI8fdCv3+05yiOXTrJu4kVE/+mAr1Ks9WIhz3sMjI+P61Qk7IE4MZzNZvl0gq5peDc5yjLh3dsF/p4MncI/nxIsGxAX4BF7Mys1JXR1dWF+fh7K5OSkl0KzsbGBQqHAi4VsBsXCKsuE336/WjGR144fkRKQjP8tpRKoX+jCimiU/YZxPp/nxrEo31PDsY7FzbcWjcdDOszQtW0p7UBVVSiNjY3i8ht8IiGTycCmOqHWuComkogJqtUCr6uKZcK+Hw9KaQfEpXR0dLxfWFhAfX09K8ktVfTBnWcveF4Og7xKOHjG54ZdelqlVqPt6DGWDaytraG5ubnUB1NTU4vt7e2HKVQNDQ28oRyUREK6uIUtTccPDhts1p0w/nzjFo5duCxnJYTDYeoFi1FF/omJiYrk/X1dUgKaVDs8zioTece5PgR7ziOXy0GUJedwenqaHkBeZw+obndXiXiP+Jv5HMfzPx4gtatKrHY7Tvx6HYGzfTwne5FPxONxrshAIMCElkrklByqALqV6EbOS0a8SamPURTzOew7eAjNYtgcDt5Pe+vq6hCLxdgDg5xAQlmxlTwaHR3VKemdnZ389q+vr7NhORSRYCJ2uVx847m5OYh/AlpaWky3LT/AtJBIJHTqRGrCtrY2JioHeZZKpZBMJuF2u2mPyd6AEaKKi4TV1dUt8Vez0R+MYLVaUVNTg9raWng8nv/YCTpF0GmlGfANkzPziGP+GwcAAAAASUVORK5CYII=";
+                button.title = "Cacher le mot de passe";
+                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAZCAYAAAArK+5dAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADr0AAA69AUf7kK0AAAQhSURBVEhL7ZVLTKNVFMf/fdIWmNJ2WplCEGigTCwZzRgcAyNqsInG8bFw4sKFCxeYuGDhYkgAxYRIgokhksiChLgjkagxIgQiTESCgkwyEIeA02FmRMAW+qLtFGi53nP6QUEibtzpLzn57j33ce4599zz4X/+YzQ1NQn5Ecr3X0GlfA1SklKObtw8Ozv72cbGxmpxcbHa6XTCZDJBq9UimUwiEonA5/Nhd3cXbrf78/Ly8qvKulP5WAp7odfrRU9Pj/gn0um0WFpaEkNDQ9Qt4F1OwaBWq3fll40YDAbR39/PGxER/4b4fXlRbppSNFl2dnbE2NiYiMVizbyTwkGImOHh4ZdlWL5qa2tTNEBOTg7euuJFsUggEQ2zTiPDVOR+BJdeeR2e+udYR+zv72NkZAT19fU/5OXlXSbdoYGJiYmC6urqkM1mQ2dnJ5qbswfRqtV44XwJLjhtiibLY94rePXd95QeIENGB4XX670uD/eMRtGjsbExXllZyQbr6uqgSqdw/ftJHtsXAiuRBB6yn4VNr2bdARu+ZZjMBSiWHhEyxLDb7Zifny/t6+u7wbMHBwcbampqjq28UKDHsxVFSg+cLV/8fAufzt3Bd7+FEUqmlBFgrO8T7CRiSg+wWCzsSSgU+po96O7u9u3t7UFeKlQqFYSM5ZcfvQ9nrh5ajRorwW1eSIseJHcQSwusJ9NwW4zQyPnpVEp64IG9pJTnEUVFRZD3CT41xV1mAeLxOA/Gw0Ek45kT1ZYWwlpg5jYhEwbhcBib0RjW45RwGQL3V5RWBnovNJcN0KmJ7e1tDoVKxvEoFvMZmM0njdz2Z7KKEPtppZWFIsI70enJIhEMBqE1mGDIzeM+UX7GgPz8/BNGfrq7jptrW9y3l5Tx9yi0FxtYWFg4XEwLg6EQKi49xX3icUc+Ck26E0ZS8q6+XbyPXwJRuC4+oWgzJBIJOByOjAH5QJYp/kajkQeJR198DXqjidtatQrPP2zFS2VWXPWU4GmXk/UEGfnm1l3kmLIeE1NTU5CZqWIDtbW17snJSeTm5kKn0/GEPOtZeN+5Bq1Oz33CZtBJT/S4XH7uLym8h/b2dmxtbfEdzszMUAHkscOH1tvb++Po6OgbHo+HnzylpNlxDmUXn8Qfvy4iEcleKFFmt8DqOo/F23e4Pz09DVlR+Q3QYzt4tMdqUSAQ+ECWjNaGhgbOgGg0ysb4XlbvYfOeD8ntKOxlFXBIobypqqriJCGobrW2tqKlpeXYvicYHx8Xc3NzXIrl3YjNzU2xtrZ2TOR/QshUFR0dHVx5j8gDKW9KYf7W0urqqpD1hB+hy+WCrI7KSAbyTBomrzEwMICuri5lhKGfF2fM6a5IZJj2/H6/lv5ghEaj4WSglC0sLDy6/pqUDzNN9Ep5GwD+BIKrAj4bY949AAAAAElFTkSuQmCC";
             } else {
                 passwordField.type = "password";
-                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAYAAACKsM07AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAPTSURBVEhLhZVfTNtVFMe//f+HAqVIxQIawKUxtrFGgkOi+KfU2A3/Jc5poi/ucS9Gs+jDsrhXfPNlib6YxcQoD2ZCQJsVEkbiADsFM2WxmNUOcfQfpS1tof15z+mFHzDmPknTe8+99/y559zz0+B/mJube2B1dTXe3t6udblcsFqt0Ov1KBaLWF9fRzQaRblchtvt/rarq+uEPHZv5ufnDaOjo9VkMqnci0qloiwtLSljY2M0tUsVd2dqaurEysoKHz7I+u1V5daN34XSbSlRKZVKSigUUnK53MdSFbPvisbHx18ZGBj4zmKxSAmQjN/E5MXP8efPP6GQzbBMJ66pzf0ojr56Ep6BQZYR1WoVExMTEDqu2Gy2p0m2a2ByctLu9XrTzc3NUgJEI1fx1dn3sb1VlpI7eTwwhNc+PCdngLgychSBQGDKZDI9p5VySmByr/Js4ja+Pn+GlXc84sXrZz6BvdUlV1Wu/fg9rl76Rs5EdDod+vv7KY/PioiG2MDIyIi/p6dn1xgR/vICSoU8j0+eG4bPfwy9pz7AxT/+xeW/M0gXt3mNCH3xmdibkzOgqamJI0mn05dYqbAYymQyELniDYq4y+tXwjwmrv+2yP+RX37FttgSy5XwQyyFLbGPKBc3sXxtnsc79PX1YWFhAWyArkZUAfL5msf5TArFvOrR2++8i46ODgwPD0sJsFlR8E9ezc1a7C85qkHvhRxmAxpNLdcbGxv8cDTafbe1u34QGTCjVCtypGI2m2sGyHuySKRSKejNVpjrbDwnuhrMcqRi1mngshnlDGh5sFOOVEgXG1hcXERjYyMLKaxUOo0jR5/hOdHjrEer1SBngFGcer7dDoOM1Gi2oPuJJ3m8Q6FQgNPprBkQ5XSD7n/vA/MdfwNGi5XHeq0GLz3kwMudDvHfhDcfbsH9VtX7wfdOw2RVIyZmZmbQ29urYQOiitzT09Ooq6uDwVDz1Oa4D4HTH0FvUBU1mw0iEiP0uprnxGP+ILyDQ8hmsxC9i3M4OztLDZDXd7MnyvRF8ZongsEgRD/hvBCpWzFcvvApEgeqRCcceeqtU/C8EOQ5FYLD4UAsFuOzHo+Hde8rj7W1tfPCyFm/388VQF5Rf+G8iJ6UuBlFcSOLls4jcIqf3mTic7S3oaEBy8vLHMGOcuLQ+guHwwol3efzce/f3Nzkg3vRigSTYtHU2ONIJALxTUBbW9s+nYcaIOLxuEIvkR5hd3c3K9oLRZZIJChq2O122nOorrsa2EHkY0t81fT0BSOomVEx1NeL0m1tveO8uE6tyEethwD4D5KG1mm4wOpjAAAAAElFTkSuQmCC";
+                button.title = "Montrer le mot de passe";
+                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAZCAYAAAArK+5dAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADr8AAA6/ATgFUyQAAAPcSURBVEhL7ZVfTNtVFMe//f+HAqVIxQIawKUxtrFGwSFR/FNqrOK/xDlN9MU97sVoFn1YFveKb74s0RezmBjlwYwQ0GaFhJE4YJ2CmbJYzGqHMPqP0v/Q/rzn9EKBsezB132S5nfuufeeP/ece4t73ON/o5LfQ5mbm3tgdXU12t7ernY4HDCbzdBqtSgUCtjY2EA4HEapVILT6fyhq6vrmNx2d+bn53Wjo6OVeDyu3I1yuawsLS0pY2NjNLRKE3dmamrq2MrKCm8+yMatVeXm9T+E0W2pqVEsFpVAIKBkMpnPpClm3xGNj4+/PjAw8KPJZJIaIB69gcnzX+GvK78gl06xTiOOqc35KI6+cRyugUHWEZVKBRMTExA2LlkslmdIt+tgcnLS6na7k83NzVIDhEOX8e3pj7C9VZKa23ncN4Q3PzkjR4A4MgoUPp9vymAwPK+Weoio43uNp2O38N3ZU2y84xE33jr1OaytDjlb4+rPo7h84Xs5EtlpNOjv76c6PicyGmIHIyMj3p6enl1nRPCbcyjmsiwfPzMMj/cV9J74GOf/XMPFf1JIFrZ5jgh8/aVYm5EjoKmpiTNJJpMX2KjwGEilUhC14gWKOMtrl4IsE9d+X+Rv6NffsC2WRDJF/BRJYEusI0qFPJavzrO8Q19fHxYWFsAO6GhEFyCbrUacTSVQyNYieu/9D9DR0YHh4WGpAfJlBf9ma7VZj/wtpSp0XyhgdqBSVWu9ubnJF0el3ndau/MHkQkzSqUspRpGo7HqgKInj0QikYDWaIaxzsJjoqvBKKUaRo0KDotejoCWBzulVINssYPFxUU0NjayktJKJJM4cvRZHhNP2uvRatbJEaAXu15ot0InM9UbTeh+4imWd8jlcrDb7VUHop2u0/nvvWCeV9+G3mRmWatW4eWHbHit0ya+TXjn4Rbcb65FP/jhSRjMtYyJmZkZ9Pb2qtiB6CLn9PQ06urqoNNVI7XY7oPv5KfQ6mqGmo06kYkeWk01cuIxrx/uwSGk02mIt4trODs7Sw8gz+9WT7TpS+I2T/j9foj3hOtCJG5GcPHcF4gd6BKNCOTpd0/A9aKfx9QINpsNkUiE97pcLra9rz3W19fPCienvV4vdwBFRe8L10W8SbEbYRQ202jpPAK7+GkNBt5HaxsaGrC8vMwZ7BgnDu2/YDCoUNE9Hg+//fl8njfuRS0KTIbFo8YRh0IhiP8EtLW17bN5qAMiGo0qdBPpEnZ3d7OhvVBmsViMsobVaqU1h9q6o4MdxOXbWltb09I/GEGPGTVDfb1o3dbW2/aL41SLelTfEAD/AX911mannbjBAAAAAElFTkSuQmCC";
             }
         }
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log(getCookieValue());
+            document.getElementById("password").value = getCookieValue();
+        });
+        
+        
     </script>
 </head>
 <body>
@@ -309,8 +390,8 @@
         </div>
         
         <div class="form-group">
-            <label for="serviceName">Nom du service :</label>
-            <input type="text" id="serviceName" name="serviceName" list="services">
+            <label for="username">Nom du service :</label>
+            <input type="text" id="username" name="serviceName" list="services">
             <datalist id="services">
                 <option value="google">
                 <option value="facebook">
@@ -320,6 +401,8 @@
                 <option value="yahoo">
                 <option value="outlook">
                 <option value="tiplanet">
+                <option value="spotify">
+                <option value="discord">
                 <!-- Ajoutez d'autres services ici -->
             </datalist>
         </div>
@@ -328,13 +411,14 @@
             <label for="password">Code secret :</label>
             <div class="input-group">
                 <input type="password" id="password" name="password">
-                <button id="togglePassword" class="toggle-password" onclick="togglePassword()">
-                    <img id="oeil" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAATCAYAAACKsM07AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAPTSURBVEhLhZVfTNtVFMe//f+HAqVIxQIawKUxtrFGgkOi+KfU2A3/Jc5poi/ucS9Gs+jDsrhXfPNlib6YxcQoD2ZCQJsVEkbiADsFM2WxmNUOcfQfpS1tof15z+mFHzDmPknTe8+99/y559zz0+B/mJube2B1dTXe3t6udblcsFqt0Ov1KBaLWF9fRzQaRblchtvt/rarq+uEPHZv5ufnDaOjo9VkMqnci0qloiwtLSljY2M0tUsVd2dqaurEysoKHz7I+u1V5daN34XSbSlRKZVKSigUUnK53MdSFbPvisbHx18ZGBj4zmKxSAmQjN/E5MXP8efPP6GQzbBMJ66pzf0ojr56Ep6BQZYR1WoVExMTEDqu2Gy2p0m2a2ByctLu9XrTzc3NUgJEI1fx1dn3sb1VlpI7eTwwhNc+PCdngLgychSBQGDKZDI9p5VySmByr/Js4ja+Pn+GlXc84sXrZz6BvdUlV1Wu/fg9rl76Rs5EdDod+vv7KY/PioiG2MDIyIi/p6dn1xgR/vICSoU8j0+eG4bPfwy9pz7AxT/+xeW/M0gXt3mNCH3xmdibkzOgqamJI0mn05dYqbAYymQyELniDYq4y+tXwjwmrv+2yP+RX37FttgSy5XwQyyFLbGPKBc3sXxtnsc79PX1YWFhAWyArkZUAfL5msf5TArFvOrR2++8i46ODgwPD0sJsFlR8E9ezc1a7C85qkHvhRxmAxpNLdcbGxv8cDTafbe1u34QGTCjVCtypGI2m2sGyHuySKRSKejNVpjrbDwnuhrMcqRi1mngshnlDGh5sFOOVEgXG1hcXERjYyMLKaxUOo0jR5/hOdHjrEer1SBngFGcer7dDoOM1Gi2oPuJJ3m8Q6FQgNPprBkQ5XSD7n/vA/MdfwNGi5XHeq0GLz3kwMudDvHfhDcfbsH9VtX7wfdOw2RVIyZmZmbQ29urYQOiitzT09Ooq6uDwVDz1Oa4D4HTH0FvUBU1mw0iEiP0uprnxGP+ILyDQ8hmsxC9i3M4OztLDZDXd7MnyvRF8ZongsEgRD/hvBCpWzFcvvApEgeqRCcceeqtU/C8EOQ5FYLD4UAsFuOzHo+Hde8rj7W1tfPCyFm/388VQF5Rf+G8iJ6UuBlFcSOLls4jcIqf3mTic7S3oaEBy8vLHMGOcuLQ+guHwwol3efzce/f3Nzkg3vRigSTYtHU2ONIJALxTUBbW9s+nYcaIOLxuEIvkR5hd3c3K9oLRZZIJChq2O122nOorrsa2EHkY0t81fT0BSOomVEx1NeL0m1tveO8uE6tyEethwD4D5KG1mm4wOpjAAAAAElFTkSuQmCC" alt="Montrer/cacher le mot de passe">
+                <button title="Montrer le mot de passe" id="togglePassword" class="toggle-password" onclick="togglePassword()">
+                    <img id="oeil" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAZCAYAAAArK+5dAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADr8AAA6/ATgFUyQAAAPcSURBVEhL7ZVfTNtVFMe//f+HAqVIxQIawKUxtrFGwSFR/FNqrOK/xDlN9MU97sVoFn1YFveKb74s0RezmBjlwYwQ0GaFhJE4YJ2CmbJYzGqHMPqP0v/Q/rzn9EKBsezB132S5nfuufeeP/ece4t73ON/o5LfQ5mbm3tgdXU12t7ernY4HDCbzdBqtSgUCtjY2EA4HEapVILT6fyhq6vrmNx2d+bn53Wjo6OVeDyu3I1yuawsLS0pY2NjNLRKE3dmamrq2MrKCm8+yMatVeXm9T+E0W2pqVEsFpVAIKBkMpnPpClm3xGNj4+/PjAw8KPJZJIaIB69gcnzX+GvK78gl06xTiOOqc35KI6+cRyugUHWEZVKBRMTExA2LlkslmdIt+tgcnLS6na7k83NzVIDhEOX8e3pj7C9VZKa23ncN4Q3PzkjR4A4MgoUPp9vymAwPK+Weoio43uNp2O38N3ZU2y84xE33jr1OaytDjlb4+rPo7h84Xs5EtlpNOjv76c6PicyGmIHIyMj3p6enl1nRPCbcyjmsiwfPzMMj/cV9J74GOf/XMPFf1JIFrZ5jgh8/aVYm5EjoKmpiTNJJpMX2KjwGEilUhC14gWKOMtrl4IsE9d+X+Rv6NffsC2WRDJF/BRJYEusI0qFPJavzrO8Q19fHxYWFsAO6GhEFyCbrUacTSVQyNYieu/9D9DR0YHh4WGpAfJlBf9ma7VZj/wtpSp0XyhgdqBSVWu9ubnJF0el3ndau/MHkQkzSqUspRpGo7HqgKInj0QikYDWaIaxzsJjoqvBKKUaRo0KDotejoCWBzulVINssYPFxUU0NjayktJKJJM4cvRZHhNP2uvRatbJEaAXu15ot0InM9UbTeh+4imWd8jlcrDb7VUHop2u0/nvvWCeV9+G3mRmWatW4eWHbHit0ya+TXjn4Rbcb65FP/jhSRjMtYyJmZkZ9Pb2qtiB6CLn9PQ06urqoNNVI7XY7oPv5KfQ6mqGmo06kYkeWk01cuIxrx/uwSGk02mIt4trODs7Sw8gz+9WT7TpS+I2T/j9foj3hOtCJG5GcPHcF4gd6BKNCOTpd0/A9aKfx9QINpsNkUiE97pcLra9rz3W19fPCienvV4vdwBFRe8L10W8SbEbYRQ202jpPAK7+GkNBt5HaxsaGrC8vMwZ7BgnDu2/YDCoUNE9Hg+//fl8njfuRS0KTIbFo8YRh0IhiP8EtLW17bN5qAMiGo0qdBPpEnZ3d7OhvVBmsViMsobVaqU1h9q6o4MdxOXbWltb09I/GEGPGTVDfb1o3dbW2/aL41SLelTfEAD/AX911mannbjBAAAAAElFTkSuQmCC" alt="Montrer/cacher le mot de passe">
                 </button>
+                <button title="Sauvegarder le mot de passe pour la prochaine fois" id="savePassword" class="save-password" onclick="save_password()">💾</button>
             </div>
         </div>
         
-        <button class="copy-button" onclick="copyPassword()">Copier le mot de passe dans le presse-papiers</button>
+        <button type="submit" id ="copypassword" title="Copier le mot de passe dans le presse-papiers" class="copy-button" onclick="copyPassword()">Copier le mot de passe</button>
     </div>
 </body>
 </html>
