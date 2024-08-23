@@ -316,12 +316,6 @@
             // Chaîne de caractères à enregistrer dans le cookie
             const value = document.getElementById("password").value;
             document.cookie = "password=" + value + "; path=/";
-
-            /*// Encodage de la valeur
-            const encodedValue = encodeURIComponent(value);
-
-            // Création du cookie avec les attributs de sécurité
-            document.cookie = "password=" + encodedValue + "; Secure; HttpOnly; SameSite=Strict; path=/";*/
             
         }
 
@@ -334,22 +328,40 @@
             
             const site = document.getElementById("username").value;
             const cle = document.getElementById("password").value;
-
-            const passwd = await getCalcMdpResult(site, cle);
             
-            try {
-              await navigator.clipboard.writeText(passwd);
-            } catch (error) {
-              alert("Votre mot de passe : " + passwd);
+            if (site == "" || cle == "") {
+                button.textContent = "☓ Tous les champs sont obligatoires";
+                button.style.backgroundColor = "red";
+                // Modifier la couleur du bouton après 1 secondes
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff';
+                    button.textContent = "Copier le mot de passe";
+                }, 1000);
             }
-            
-            button.textContent = "✓ Copié !";
-            button.style.backgroundColor = "green";
-            // Modifier la couleur du bouton après 2 secondes
-            setTimeout(() => {
-                button.style.backgroundColor = '#007bff';
-                button.textContent = "Copier le mot de passe";
-            }, 1000);
+            else {
+                const passwd = await getCalcMdpResult(site, cle);
+                
+                try {
+                    await navigator.clipboard.writeText(passwd);
+                } catch (error) {
+                    button.textContent = "☓ La copie a échoué";
+                    button.style.backgroundColor = "red";
+                    // Modifier la couleur du bouton après 1 secondes
+                    setTimeout(() => {
+                        button.style.backgroundColor = '#007bff';
+                        button.textContent = "Copier le mot de passe";
+                    }, 1000);
+                    alert("Votre mot de passe : " + passwd);
+                }
+                
+                button.textContent = "✓ Copié !";
+                button.style.backgroundColor = "green";
+                // Modifier la couleur du bouton après 1 secondes
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff';
+                    button.textContent = "Copier le mot de passe";
+                }, 1000);
+            }
             
         }
 
