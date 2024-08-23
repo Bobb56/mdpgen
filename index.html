@@ -297,20 +297,17 @@
         
         
         
-        function getCookieValue() {
-            // Encode le nom du cookie pour correspondre à l'encodage utilisé lors de la définition
-            const encodedName = encodeURIComponent("password") + "=";
+        function getCookieValue(name) {
+            const nameEQ = encodeURIComponent(name) + "=";
             const cookies = document.cookie.split(';');
-
+            
             for (let i = 0; i < cookies.length; i++) {
                 let cookie = cookies[i].trim();
-                if (cookie.indexOf(encodedName) === 0) {
-                    // Décoder et retourner la valeur du cookie
-                    return decodeURIComponent(cookie.substring(encodedName.length));
+                if (cookie.indexOf(nameEQ) === 0) {
+                    return decodeURIComponent(cookie.substring(nameEQ.length));
                 }
             }
-            // Retourne une chaîne vide si le cookie n'est pas trouvé
-            return "";
+            return ""; // Retourne null si le cookie n'existe pas
         }
         
         
@@ -319,12 +316,13 @@
             // Chaîne de caractères à enregistrer dans le cookie
             const value = document.getElementById("password").value;
             console.log(value);
+            document.cookie = "password=" + value + "; path=/";
 
-            // Encodage de la valeur
+            /*// Encodage de la valeur
             const encodedValue = encodeURIComponent(value);
 
             // Création du cookie avec les attributs de sécurité
-            document.cookie = "password=" + encodedValue + "; Secure; HttpOnly; SameSite=Strict; path=/";
+            document.cookie = "password=" + encodedValue + "; Secure; HttpOnly; SameSite=Strict; path=/";*/
             
         }
 
