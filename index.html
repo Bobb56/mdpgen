@@ -213,6 +213,26 @@
         }
         
         
+        /* Media Query pour les petits écrans */
+        @media (max-width: 550px) {
+            .form-group {
+                flex-direction: column; /* Empile le label et l'input verticalement */
+                align-items: flex-start;
+            }
+
+            label {
+                margin-right: 0; /* Enlève la marge à droite du label */
+                text-align: left; /* Aligne le texte à gauche */
+                margin-bottom: 5px; /* Ajoute un peu d'espace en dessous du label */
+                min-width: auto; /* Permet au label de s'ajuster à la largeur du contenu */
+            }
+
+            .input-group {
+                width: 100%;
+            }
+        }
+        
+        
     </style>
     <script type="text/javascript">
         
@@ -380,11 +400,22 @@
             const value = document.getElementById("password").value;
             document.cookie = "password=" + value + "; path=/";
             
+            
+            button = document.getElementById("copypassword");
+            button.textContent = "✓ Enregistré !";
+            button.style.backgroundColor = "green";
+            // Modifier la couleur du bouton après 1 secondes
+            setTimeout(() => {
+                button.style.backgroundColor = '#007bff';
+                button.textContent = "Copier le mot de passe";
+            }, 1000);
+            
         }
 
 
     
         async function copyPassword() {
+            
             // modifie le bouton pendant la copie
             button = document.getElementById("copypassword");
             button.textContent = "••• Copie du mot de passe";
@@ -411,6 +442,7 @@
                 }, 1000);
             }
             else {
+                
                 const passwd = await getCalcMdpResult(site, cle);
                 
                 try {
