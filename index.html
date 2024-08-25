@@ -538,6 +538,18 @@
         }
             
 
+        function check_settings() {
+            const button = document.getElementById('save-settings');
+            
+            if (document.getElementById("passwordLength").value == "")
+                return "Veuillez indiquer une longueur";
+            if (document.getElementById("passwordChanges").value == "")
+                return "Veuillez indiquer le nombre de changements du mot de passe";
+            if (!_minus && !_majus && !_chiffres && !_specs) // erreur !
+                return "Veuillez cocher au moins une case";
+
+            return "";
+        }
         
         
         function refreshSettings() {
@@ -549,9 +561,9 @@
             _chiffres = document.getElementById("numbers").checked;
             _specs = document.getElementById("specialChars").checked;
             
-            
-            if (!_minus && !_majus && !_chiffres && !_specs) { // erreur !
-                button.textContent = "☓ Cochez au moins une case";
+            const check = check_settings();
+            if (check != "") { // erreur !
+                button.textContent = "☓ "+check;
                 button.style.backgroundColor = "red";
                 // Modifier la couleur du bouton après 1 secondes
                 setTimeout(() => {
@@ -559,7 +571,7 @@
                     button.textContent = "Enregistrer pour plus tard";
                 }, 1000);
                 
-                return ;
+                return false;
                 
             }
             
@@ -588,7 +600,8 @@
                 button.style.backgroundColor = '#007bff';
                 button.textContent = "Enregistrer pour plus tard";
             }, 1000);
-            
+
+            return true;
         }
         
         
@@ -918,15 +931,22 @@
             settings_window.style.display = "block";
         }
 
+        function close_settings() {
+            if (refreshSettings())
+                settings_window.style.display = none;
+        }
+
         // Lorsque l'utilisateur clique sur le "X", fermer la modale
         span_settings.onclick = function() {
-            settings_window.style.display = "none";
+            close_settings();
         }
+                
+        
 
         // Lorsque l'utilisateur clique en dehors de la modale, fermer la modale
         window.onclick = function(event) {
             if (event.target == settings_window) {
-                settings_window.style.display = "none";
+                close_settings();
             }
             else if (event.target == modal) {
                 modal.style.display = "none";
@@ -936,9 +956,10 @@
         
         function saveSettings() {
             if (ask_cookies()) {
-                refreshSettings();
-                const settings = [_minus, _majus, _chiffres, _specs, passwd_length, passwd_nb, account_id];
-                document.cookie = 'settings=' + JSON.stringify(settings) + '; path=/';
+                if (refreshSettings()) {
+                    const settings = [_minus, _majus, _chiffres, _specs, passwd_length, passwd_nb, account_id];
+                    document.cookie = 'settings=' + JSON.stringify(settings) + '; path=/';
+                }
             }
             else {
                 const button = document.getElementById('save-settings');
