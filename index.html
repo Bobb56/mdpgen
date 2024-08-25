@@ -539,7 +539,6 @@
             
 
         function check_settings() {
-            const button = document.getElementById('save-settings');
             
             if (document.getElementById("passwordLength").value == "")
                 return "Veuillez indiquer une longueur";
@@ -924,7 +923,7 @@
         }
 
         function close_settings() {
-            if (refreshSettings())
+            if (true)//refreshSettings())
                 settings_window.style.display = none;
         }
 
