@@ -271,7 +271,7 @@
             max-width: 300px;
             top: 50%; /* Position from the top */
             left: 50%; /* Position from the left */
-            transform: translate(0, -10%); /* Center vertically and horizontally */
+            transform: translate(0, -5%); /* Center vertically and horizontally */
             animation: slideIn 0.5s; /* Animation */
         }
 
@@ -414,8 +414,8 @@
 
         /* Slide-in animation */
         @keyframes slideIn {
-            from { transform: translate(0%, -20%); opacity: 0; }
-            to { transform: translate(0%, -10%); opacity: 1; }
+            from { transform: translate(0%, -10%); opacity: 0; }
+            to { transform: translate(0%, -5%); opacity: 1; }
         }
         
         
@@ -435,6 +435,15 @@
         var _majus = true;
         var _specs = true;
         var account_id = "";
+        var cookies = false;
+        
+        function ask_cookies() {
+            if (!cookies) {
+                cookies = confirm("Cette fonctionnalité requiert l'utilisation de cookies.");
+            }
+            return cookies;
+        }
+        
         
         
         function inter(word, list) {
@@ -618,19 +627,31 @@
         
         
         function save_password() {
-            // Chaîne de caractères à enregistrer dans le cookie
-            const value = document.getElementById("password").value;
-            document.cookie = "password=" + value + "; path=/";
-            
-            
-            button = document.getElementById("copypassword");
-            button.textContent = "✓ Enregistré !";
-            button.style.backgroundColor = "green";
-            // Modifier la couleur du bouton après 1 secondes
-            setTimeout(() => {
-                button.style.backgroundColor = '#007bff';
-                button.textContent = "Copier le mot de passe";
-            }, 1000);
+            if (ask_cookies()) {
+                // Chaîne de caractères à enregistrer dans le cookie
+                const value = document.getElementById("password").value;
+                document.cookie = "password=" + value + "; path=/";
+                
+                
+                button = document.getElementById("copypassword");
+                button.textContent = "✓ Enregistré !";
+                button.style.backgroundColor = "green";
+                // Modifier la couleur du bouton après 1 secondes
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff';
+                    button.textContent = "Copier le mot de passe";
+                }, 1000);
+            }
+            else {
+                const button = document.getElementById("copypassword");
+                button.textContent = "☓ Veuillez accepter les cookies";
+                button.style.backgroundColor = "red";
+                // Modifier la couleur du bouton après 2 secondes
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff';
+                    button.textContent = "Copier le mot de passe";
+                }, 1000);
+            }
             
         }
 
@@ -914,9 +935,21 @@
         
         
         function saveSettings() {
-            refreshSettings();
-            const settings = [_minus, _majus, _chiffres, _specs, passwd_length, passwd_nb, account_id];
-            document.cookie = 'settings=' + JSON.stringify(settings) + '; path=/';
+            if (ask_cookies()) {
+                refreshSettings();
+                const settings = [_minus, _majus, _chiffres, _specs, passwd_length, passwd_nb, account_id];
+                document.cookie = 'settings=' + JSON.stringify(settings) + '; path=/';
+            }
+            else {
+                const button = document.getElementById('save-settings');
+                button.textContent = "☓ Veuillez accepter les cookies";
+                button.style.backgroundColor = "red";
+                // Modifier la couleur du bouton après 2 secondes
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff';
+                    button.textContent = "Enregistrer pour plus tard";
+                }, 1000);
+            }
         }
         
         
