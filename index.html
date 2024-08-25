@@ -569,7 +569,7 @@
                 setTimeout(() => {
                     button.style.backgroundColor = '#007bff';
                     button.textContent = "Enregistrer pour plus tard";
-                }, 1000);
+                }, 2000);
                 
                 return false;
                 
@@ -592,14 +592,6 @@
             if (_specs)
                 chars = [...chars, ...specs];
             
-            
-            button.textContent = "✓ Sauvegardé !";
-            button.style.backgroundColor = "green";
-            // Modifier la couleur du bouton après 1 secondes
-            setTimeout(() => {
-                button.style.backgroundColor = '#007bff';
-                button.textContent = "Enregistrer pour plus tard";
-            }, 1000);
 
             return true;
         }
@@ -959,6 +951,14 @@
                 if (refreshSettings()) {
                     const settings = [_minus, _majus, _chiffres, _specs, passwd_length, passwd_nb, account_id];
                     document.cookie = 'settings=' + JSON.stringify(settings) + '; path=/';
+                    
+                    button.textContent = "✓ Sauvegardé !";
+                    button.style.backgroundColor = "green";
+                    // Modifier la couleur du bouton après 1 secondes
+                    setTimeout(() => {
+                        button.style.backgroundColor = '#007bff';
+                        button.textContent = "Enregistrer pour plus tard";
+                    }, 1000);
                 }
             }
             else {
