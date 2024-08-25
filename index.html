@@ -178,6 +178,27 @@
             background-color: #0056b3;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        
+        
+        .settings-button {
+            //width: 100%; /* Étend le bouton sur toute la largeur du conteneur */
+            padding: 5px;
+            background-color: #666666;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 21px;
+            cursor: pointer;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            margin: 20px 0 0; /* Ajoute de l'espace en haut, pas besoin de centrer horizontalement */
+            margin-left: 10px;
+            display: block; /* Assure que le bouton occupe la largeur définie */
+        }
+
+        .settings-button:hover {
+            background-color: #454545;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
 
         button {
             padding: 10px;
@@ -198,16 +219,19 @@
         
         /* Style pour la fenêtre modale */
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
             left: 0;
             top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0, 0, 0, 0.4); 
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            animation: fadeIn 0.5s; /* Animation */
         }
+        
 
         .modal-content {
             background-color: #fefefe;
@@ -216,6 +240,10 @@
             border: 2px solid #888;
             width: 80%;
             max-width: 300px;
+            top: 50%; /* Position from the top */
+            left: 50%; /* Position from the left */
+            transform: translate(0, -25%); /* Center vertically and horizontally */
+            animation: slideIn 0.5s; /* Animation */
         }
 
         .close {
@@ -230,6 +258,123 @@
             color: black;
             text-decoration: none;
             cursor: pointer;
+        }
+        
+        /* Style pour la fenêtre de paramètres */
+
+        .settings-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 20px;
+            border: 2px solid #888;
+            width: 80%;
+            max-width: 300px;
+            top: 50%; /* Position from the top */
+            left: 50%; /* Position from the left */
+            transform: translate(0, -25%); /* Center vertically and horizontally */
+            animation: slideIn 0.5s; /* Animation */
+        }
+
+        .close-settings {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-settings:hover,
+        .close-settings:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .checkbox-label {
+            flex-grow: 1; /* Permet à l'étiquette de prendre toute la place restante */
+            margin-right: 10px;
+            font-weight: bold;
+            color: #333;
+            text-align: left; /* Assure que le texte est aligné à gauche */
+        }
+        
+        
+        input[type="checkbox"] {
+            position: relative;
+            width: 25px;
+            height: 25px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background: white;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        input[type="checkbox"]:checked::before {
+            content: '✔';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: black;
+            backgroud-color: #28ff22;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background-color: transparent;
+            border-radius: 50%;
+            transition: width 0.3s ease, height 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        input[type="checkbox"]:checked::before {
+            width: 100%;
+            height: 100%;
+            background-color: #28ff22;
+            transform: scale(1);
+        }
+
+        input[type="number"] {
+            width: 50px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .save-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .save-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         
@@ -261,22 +406,55 @@
             color: #555; /* Couleur du texte (gris) */
         }
         
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Slide-in animation */
+        @keyframes slideIn {
+            from { transform: translate(0%, -35%); opacity: 0; }
+            to { transform: translate(0%, -25%); opacity: 1; }
+        }
+        
         
     </style>
     <script type="text/javascript">
         
-        const passwd_length = 16;
+        var passwd_length = 16;
         const specs = ['!', '@', '#', '$', '%', '&', '*', '-', '_', '/'];
         const minus = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i));
         const chiffres = Array.from({ length: 10 }, (_, i) => String.fromCharCode(48 + i));
         const majus = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
 
-        const chars = [...minus, ...majus, ...chiffres, ...specs, ...specs];
+        var chars = [...minus, ...majus, ...chiffres, ...specs];
+        var passwd_nb = 1;
+        var _chiffres = true;
+        var _minus = true;
+        var _majus = true;
+        var _specs = true;
+        var account_id = "";
+        
         
         function inter(word, list) {
             for (let i = 0 ; i < word.length ; i++) {
                 if (list.includes(word[i]))
                     return true;
+            }
+            
+            return false;
+            
+        }
+        
+        function inter2(word, list) {
+            let count = 0;
+            for (let i = 0 ; i < word.length ; i++) {
+                if (list.includes(word[i])) {
+                    count ++;
+                    if (count == 2)
+                        return true;
+                }
             }
             
             return false;
@@ -295,22 +473,111 @@
         }
         
         
-        function complete(word) {
-            if (!inter(word, specs))
-                word += "/";
-            if (!inter(word, minus))
-                word += "a";
-            if (!inter(word, majus))
-                word += "A";
-            if (!inter(word, chiffres))
-                word += "0";
-        
+        function complete(word) { // complete s'il manque certains caractères, sans changer la taille du mot d'origine
+            
+            if (!inter(word, minus) && _minus) {
+                if (inter2(word, majus))
+                    word = replaceFirst(word, majus, 'a');
+                else if (inter2(word, chiffres))
+                    word = replaceFirst(word, chiffres, 'a');
+                else
+                    word = replaceFirst(word, specs, 'a');
+            }
+            
+            if (!inter(word, majus) && _majus) {
+                if (inter2(word, minus))
+                    word = replaceFirst(word, minus, 'A');
+                else if (inter2(word, chiffres))
+                    word = replaceFirst(word, chiffres, 'A');
+                else
+                    word = replaceFirst(word, specs, 'A');
+            }
+            
+            
+            if (!inter(word, chiffres) && _chiffres) {
+                if (inter2(word, majus))
+                    word = replaceFirst(word, majus, '0');
+                else if (inter2(word, minus))
+                    word = replaceFirst(word, minus, '0');
+                else
+                    word = replaceFirst(word, specs, '0');
+            }
+            
+            if (!inter(word, specs) && _specs) {
+                if (inter2(word, majus))
+                    word = replaceFirst(word, majus, '/');
+                else if (inter2(word, chiffres))
+                    word = replaceFirst(word, chiffres, '/');
+                else
+                    word = replaceFirst(word, minus, '/');
+            }
+            
             return word;
         }
+        
+        
+        
+        function replaceFirst(word, array, car) {
+            let word2 = word.split("");
+            let i = 0;
+            for ( ; !array.includes(word2[i]) ; i++);
             
+            word2[i] = car;
+            
+            return word2.join("");
+            
+        }
+            
+
+        
+        
+        function refreshSettings() {
+            
+            _minus = document.getElementById("lowercase").checked;
+            _majus = document.getElementById("uppercase").checked;
+            _chiffres = document.getElementById("numbers").checked;
+            _specs = document.getElementById("specialChars").checked;
+            
+            
+            if (!_minus && !_majus && !_chiffres && !_specs) { // erreur !
+                const button = document.getElementById("save-settings");
+                button.textContent = "☓ Cochez au moins une case";
+                button.style.backgroundColor = "red";
+                // Modifier la couleur du bouton après 1 secondes
+                setTimeout(() => {
+                    button.style.backgroundColor = '#007bff';
+                    button.textContent = "Copier le mot de passe";
+                }, 1000);
+                
+                return ;
+                
+            }
+            
+            
+            passwd_length = parseFloat(document.getElementById("passwordLength").value);
+            passwd_nb = document.getElementById("passwordChanges").value;
+            
+            account_id = document.getElementById("account-id").value;
+            
+            chars = [];
+            
+            if (_minus)
+                chars = [...chars, ...minus];
+            if (_majus)
+                chars = [...chars, ...majus];
+            if (_chiffres)
+                chars = [...chars, ...chiffres];
+            if (_specs)
+                chars = [...chars, ...specs];
+            
+        }
+        
+        
         
         function getCalcMdpResult(site, cle) {
-            const inputText = site+cle;
+            refreshSettings(); // transférer la valeur des éléments HTML dans les variables javascript
+        
+            const inputText = passwd_nb + account_id + site + cle;
             const hashHex = sha3_256(inputText);
 
             // Conversion du hash hexadécimal en tableau d'octets
@@ -322,7 +589,6 @@
             // Conversion du tableau d'octets en chaîne de caractères
             return complete(byteArray.map(byte => chars[byte % chars.length]).join(''));
         }
-        
         
         
         
@@ -378,7 +644,7 @@
                     button.textContent = "Copier le mot de passe";
                 }, 1000);
             }
-            else if (!checkWord(site) || !checkWord(cle)) {
+            /*else if (!checkWord(site) || !checkWord(cle)) {
                 button.textContent = "☓ Caractère spécial inconnu";
                 button.style.backgroundColor = "red";
                 // Modifier la couleur du bouton après 1 secondes
@@ -386,7 +652,7 @@
                     button.style.backgroundColor = '#007bff';
                     button.textContent = "Copier le mot de passe";
                 }, 1000);
-            }
+            }*/
             else {
                 
                 const passwd = await getCalcMdpResult(site, cle);
@@ -530,7 +796,12 @@
             </div>
         </div>
         
-        <button type="submit" id ="copypassword" title="Copier le mot de passe dans le presse-papiers" class="copy-button" onclick="copyPassword()">Copier le mot de passe</button>
+        <div class="form-group">
+            <button type="submit" id ="copypassword" title="Copier le mot de passe dans le presse-papiers" class="copy-button" onclick="copyPassword()">Copier le mot de passe</button>
+            
+            <button id ="settings" title="Copier le mot de passe dans le presse-papiers" class="settings-button" onclick="open_settings()">⚙️</button>
+        </div>
+        
     </div>
     
     
@@ -539,6 +810,45 @@
         <div class="modal-content">
             <span class="close">❌</span>
             <b>Mot de passe : </b><p></p>
+        </div>
+    </div>
+    
+    
+    <!-- Fenêtre de paramètres -->
+    <div id="settings-window" class="modal">
+        <div class="settings-content">
+            <span class="close-settings">❌</span>
+            <h2>Paramètres :</h2>
+            <div class="form-group">
+                <label for="lowercase" class="checkbox-label">Minuscules</label>
+                <input type="checkbox" id="lowercase" checked>
+            </div>
+            <div class="form-group">
+                <label for="uppercase" class="checkbox-label">Majuscules</label>
+                <input type="checkbox" id="uppercase" checked>
+            </div>
+            <div class="form-group">
+                <label for="numbers" class="checkbox-label">Chiffres</label>
+                <input type="checkbox" id="numbers" checked>
+            </div>
+            <div class="form-group">
+                <label for="specialChars" class="checkbox-label">Caractères spéciaux</label>
+                <input type="checkbox" id="specialChars" checked>
+            </div>
+            <div class="form-group">
+                <label for="passwordLength" class="checkbox-label">Longueur</label>
+                <input type="number" id="passwordLength" value="16" min="4" max="32">
+            </div>
+            <div class="form-group">
+                <label for="passwordChanges" class="checkbox-label" title="Si vous voulez changer de mot de passe pour un site, incrémentez ce compteur et vous aurez un mot de passe différent">Nombre de changements de mot de passe</label>
+                <input type="number" id="passwordChanges" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label for="account-id" class="checkbox-label" title="Si vous avez plusieurs comptes sur le même site">Identifiant de compte</label>
+                <input type="text" id="account-id">
+            </div>
+            
+            <button class="save-button" id="save-settings" onclick="saveSettings()">Enregistrer pour plus tard</button>
         </div>
     </div>
     
@@ -564,18 +874,54 @@
         span.onclick = function() {
             modal.style.display = "none";
         }
+        
+        
+        
+        
+        // fonctions pour les paramètres
+        const settings_window = document.getElementById("settings-window");
+        const span_settings = document.getElementsByClassName("close-settings")[0];
+
+        // Fonction pour ouvrir la modale
+        function open_settings() {
+            settings_window.style.display = "block";
+        }
+
+        // Lorsque l'utilisateur clique sur le "X", fermer la modale
+        span_settings.onclick = function() {
+            settings_window.style.display = "none";
+        }
 
         // Lorsque l'utilisateur clique en dehors de la modale, fermer la modale
         window.onclick = function(event) {
-            if (event.target == modal) {
+            if (event.target == settings_window) {
+                settings_window.style.display = "none";
+            }
+            else if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
         
         
+        function saveSettings() {
+            refreshSettings();
+            const settings = [_minus, _majus, _chiffres, _specs, passwd_length, passwd_nb, account_id];
+            document.cookie = 'settings=' + JSON.stringify(settings) + '; path=/";
+        }
+        
+        
+        
+        
+        
         
         // trucs à exécuter à la toute fin
         document.getElementById("password").value = getCookieValue("password");
+        
+        settings = getCookieValue("settings");
+        if (settings != "") {
+            console.log(settings);
+            
+        }
     </script>
     
 </body>
