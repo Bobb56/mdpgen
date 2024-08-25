@@ -539,14 +539,16 @@
             
 
         function check_settings() {
-            
-            if (document.getElementById("passwordLength").value == "")
+            let l = document.getElementById("passwordLength").value;
+            if (l == "")
                 return "Veuillez indiquer une longueur";
             if (document.getElementById("passwordChanges").value == "")
                 return "Veuillez indiquer le nombre de changements du mot de passe";
             if (!_minus && !_majus && !_chiffres && !_specs) // erreur !
                 return "Veuillez cocher au moins une case";
-
+            if (parseFloat(l) < 4 || parseFloat(l) > 32)
+                return "Veuillez indiquer une longueur entre 4 et 32":
+            
             return "";
         }
         
@@ -924,7 +926,7 @@
 
         function close_settings() {
             if (true)//refreshSettings())
-                settings_window.style.display = none;
+                settings_window.style.display = "none";
         }
 
         // Lorsque l'utilisateur clique sur le "X", fermer la modale
