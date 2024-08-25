@@ -532,6 +532,8 @@
         
         
         function refreshSettings() {
+        
+            const button = document.getElementById("save-settings");
             
             _minus = document.getElementById("lowercase").checked;
             _majus = document.getElementById("uppercase").checked;
@@ -540,13 +542,12 @@
             
             
             if (!_minus && !_majus && !_chiffres && !_specs) { // erreur !
-                const button = document.getElementById("save-settings");
                 button.textContent = "☓ Cochez au moins une case";
                 button.style.backgroundColor = "red";
                 // Modifier la couleur du bouton après 1 secondes
                 setTimeout(() => {
                     button.style.backgroundColor = '#007bff';
-                    button.textContent = "Copier le mot de passe";
+                    button.textContent = "Enregistrer pour plus tard";
                 }, 1000);
                 
                 return ;
@@ -569,6 +570,15 @@
                 chars = [...chars, ...chiffres];
             if (_specs)
                 chars = [...chars, ...specs];
+            
+            
+            button.textContent = "✓ Sauvegardé !";
+            button.style.backgroundColor = "green";
+            // Modifier la couleur du bouton après 1 secondes
+            setTimeout(() => {
+                button.style.backgroundColor = '#007bff';
+                button.textContent = "Enregistrer pour plus tard";
+            }, 1000);
             
         }
         
@@ -919,7 +929,18 @@
         
         settings = getCookieValue("settings");
         if (settings != "") {
-            console.log(settings);
+            const settings_list = JSON.parse(settings);
+            
+            document.getElementById("lowercase").checked = settings_list[0];
+            document.getElementById("uppercase").checked = settings_list[1];
+            document.getElementById("numbers").checked = settings_list[2];
+            document.getElementById("specialChars").checked = settings_list[3];
+            
+            document.getElementById("passwordLength").value = settings_list[4];
+            document.getElementById("passwordChanges").value = settings_list[4];
+            document.getElementById("account-id").value = settings_list[5];
+            
+            refreshSettings();
             
         }
     </script>
