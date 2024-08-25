@@ -958,9 +958,11 @@
         
         
         // trucs à exécuter à la toute fin
-        document.getElementById("password").value = getCookieValue("password");
+        const pwd = getCookieValue("password");
+        document.getElementById("password").value = pwd;
         
         settings = getCookieValue("settings");
+
         if (settings != "") {
             const settings_list = JSON.parse(settings);
             
@@ -974,6 +976,11 @@
             document.getElementById("account-id").value = settings_list[6];
             
             refreshSettings();
+
+
+            if (settings != "" || pwd != "")
+                cookies = true;
+
             
         }
     </script>
