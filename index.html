@@ -692,7 +692,7 @@
             }*/
             else {
                 
-                const passwd = await getCalcMdpResult(site, cle);
+                const passwd = getCalcMdpResult(site, cle);
                 
                 try {
                     await navigator.clipboard.writeText(passwd);
