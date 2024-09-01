@@ -421,7 +421,7 @@
         
     </style>
     <script type="text/javascript">
-        
+        var iterations = 30000;
         var passwd_length = 16;
         const specs = ['!', '@', '#', '$', '%', '&', '*', '-', '_', '/'];
         const minus = Array.from({ length: 26 }, (_, i) => String.fromCharCode(97 + i));
@@ -598,18 +598,38 @@
         }
         
         
+        function prepare(hashHex) {
+                        
+            // Conversion du hash hexadécimal en tableau d'octets
+            const strArray = [];
+            for (let i = 0; i < hashHex.length; i += 2) {
+                strArray.push(String.fromCharCode(parseInt(hashHex.substr(i, 2), 16)));
+            }
+            
+            return strArray.join('');
+        }
+        
+        
         
         function getCalcMdpResult(site, cle) {
             refreshSettings(); // transférer la valeur des éléments HTML dans les variables javascript
         
             const inputText = passwd_nb + account_id + site + cle;
-            const hashHex = sha3_256(inputText);
+            
+            
+            var hashHex = sha3_256(inputText);
+            for (let i = 0 ; i < iterations - 1 ; i++) {
+                hashHex = sha3_256(prepare(hashHex));
+            }
+            
+            
 
             // Conversion du hash hexadécimal en tableau d'octets
             const byteArray = [];
             for (let i = 0; i < 2*passwd_length; i += 2) {
                 byteArray.push(parseInt(hashHex.substr(i, 2), 16));
             }
+            
             
             // Conversion du tableau d'octets en chaîne de caractères
             return complete(byteArray.map(byte => chars[byte % chars.length]).join(''));
