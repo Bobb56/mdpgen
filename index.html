@@ -774,7 +774,7 @@
         </div>
         
         <div class="form-group">
-            <label for="username">Nom du service :</label>
+            <label for="username">Service name :</label>
             <input type="text" id="username" name="serviceName" list="services">
             <datalist id="services">
                 <option value="6play"></option>
@@ -853,7 +853,7 @@
         </div>
 
         <div class="form-group">
-            <label for="password">Code secret :</label>
+            <label for="password">Password :</label>
             <div class="input-group">
                 <input type="password" id="password" name="password">
                 <button title="Montrer le mot de passe" id="togglePassword" class="toggle-password" onclick="togglePassword()">
@@ -864,9 +864,9 @@
         </div>
         
         <div class="form-group">
-            <button type="submit" id ="copypassword" title="Copier le mot de passe dans le presse-papiers" class="copy-button" onclick="copyPassword()">Copier le mot de passe</button>
+            <button type="submit" id ="copypassword" title="Copy password to clipboard" class="copy-button" onclick="copyPassword()">Copy password</button>
             
-            <button id ="settings" title="Paramètres de génération des mots de passe" class="settings-button" onclick="open_settings()">⚙️</button>
+            <button id ="settings" title="Settings for password generation" class="settings-button" onclick="open_settings()">⚙️</button>
         </div>
         
     </div>
@@ -887,35 +887,35 @@
             <span class="close-settings">❌</span>
             <h2>Paramètres :</h2>
             <div class="form-group">
-                <label for="lowercase" class="checkbox-label">Minuscules</label>
+                <label for="lowercase" class="checkbox-label">Lowercase letters</label>
                 <input type="checkbox" id="lowercase" checked>
             </div>
             <div class="form-group">
-                <label for="uppercase" class="checkbox-label">Majuscules</label>
+                <label for="uppercase" class="checkbox-label">Uppercase letters</label>
                 <input type="checkbox" id="uppercase" checked>
             </div>
             <div class="form-group">
-                <label for="numbers" class="checkbox-label">Chiffres</label>
+                <label for="numbers" class="checkbox-label">Digits</label>
                 <input type="checkbox" id="numbers" checked>
             </div>
             <div class="form-group">
-                <label for="specialChars" class="checkbox-label">Caractères spéciaux</label>
+                <label for="specialChars" class="checkbox-label">Special characters</label>
                 <input type="checkbox" id="specialChars" checked>
             </div>
             <div class="form-group">
-                <label for="passwordLength" class="checkbox-label">Longueur</label>
+                <label for="passwordLength" class="checkbox-label">Length</label>
                 <input type="number" id="passwordLength" value="16" min="4" max="32">
             </div>
             <div class="form-group">
-                <label for="passwordChanges" class="checkbox-label" title="Si vous voulez changer de mot de passe pour un site, incrémentez ce compteur et vous aurez un mot de passe différent">Nombre de changements de mot de passe</label>
+                <label for="passwordChanges" class="checkbox-label" title="If you would like to change your password for a website, just increase this counter and you'll get a different one">Number of password changes</label>
                 <input type="number" id="passwordChanges" value="0" min="0">
             </div>
             <div class="form-group">
-                <label for="account-id" class="checkbox-label" title="Si vous avez plusieurs comptes sur le même site">Identifiant de compte</label>
+                <label for="account-id" class="checkbox-label" title="If you have several accounts on the same website">Account ID</label>
                 <input type="text" id="account-id">
             </div>
             
-            <button class="save-button" id="save-settings" title="Enregistrer les paramètres dans un cookie pour la prochaine session" onclick="saveSettings()">Enregistrer pour plus tard</button>
+            <button class="save-button" id="save-settings" title="Save settings in a cookie for the next time" onclick="saveSettings()">Save for later</button>
         </div>
     </div>
     
@@ -923,7 +923,7 @@
     <!-- Ligne ajoutée pour "À propos de MdpGen" avec un lien -->
     <div class="footer">
         <p style="text-align: center; margin-top: 20px;">
-            <a href="https://mdpgen.raphaael.fr/about.html" style="color: #3ea599; text-decoration: none; target" target="_blank">À propos de MdpGen</a>
+            <a href="https://mdpgen.raphaael.fr/about.html" style="color: #3ea599; text-decoration: none; target" target="_blank">About MdpGen</a>
         </p>
     </div>
     
