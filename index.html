@@ -439,7 +439,7 @@
         
         function ask_cookies() {
             if (!cookies) {
-                cookies = confirm("Cette fonctionnalité requiert l'utilisation de cookies.");
+                cookies = confirm("This feature requires the use of cookies.");
             }
             return cookies;
         }
@@ -541,13 +541,13 @@
         function check_settings() {
             let l = document.getElementById("passwordLength").value;
             if (l == "")
-                return "Veuillez indiquer une longueur";
+                return "Please specify a length";
             if (document.getElementById("passwordChanges").value == "")
-                return "Veuillez indiquer le nombre de changements du mot de passe";
+                return "Please specify the number of password changes";
             if (!_minus && !_majus && !_chiffres && !_specs) // erreur !
-                return "Veuillez cocher au moins une case";
+                return "Please check at least one box";
             if (isNaN(parseFloat(l)) || parseFloat(l) < 4 || parseFloat(l) > 32 || parseFloat (l)!=parseInt(l))
-                return "Veuillez indiquer une longueur entière entre 4 et 32";
+                return "Please specify a length between 4 and 32";
             
             return "";
         }
@@ -660,22 +660,22 @@
                 
                 
                 button = document.getElementById("copypassword");
-                button.textContent = "✓ Enregistré !";
+                button.textContent = "✓ Saved !";
                 button.style.backgroundColor = "green";
                 // Modifier la couleur du bouton après 1 secondes
                 setTimeout(() => {
                     button.style.backgroundColor = '#007bff';
-                    button.textContent = "Copier le mot de passe";
+                    button.textContent = "Copy password";
                 }, 1000);
             }
             else {
                 const button = document.getElementById("copypassword");
-                button.textContent = "☓ Veuillez accepter les cookies";
+                button.textContent = "☓ Please accept cookies";
                 button.style.backgroundColor = "red";
                 // Modifier la couleur du bouton après 2 secondes
                 setTimeout(() => {
                     button.style.backgroundColor = '#007bff';
-                    button.textContent = "Copier le mot de passe";
+                    button.textContent = "Copy password";
                 }, 1000);
             }
             
@@ -687,18 +687,18 @@
             
             // modifie le bouton pendant la copie
             button = document.getElementById("copypassword");
-            button.textContent = "••• Copie du mot de passe";
+            button.textContent = "••• Copying password";
             
             const site = document.getElementById("username").value;
             const cle = document.getElementById("password").value;
             
             if (site == "" || cle == "") {
-                button.textContent = "☓ Tous les champs sont obligatoires";
+                button.textContent = "☓ You must fill all fields";
                 button.style.backgroundColor = "red";
                 // Modifier la couleur du bouton après 1 secondes
                 setTimeout(() => {
                     button.style.backgroundColor = '#007bff';
-                    button.textContent = "Copier le mot de passe";
+                    button.textContent = "Copy password";
                 }, 1000);
             }
             /*else if (!checkWord(site) || !checkWord(cle)) {
@@ -717,21 +717,21 @@
                 try {
                     await navigator.clipboard.writeText(passwd);
                     
-                    button.textContent = "✓ Copié !";
+                    button.textContent = "✓ Copied !";
                     button.style.backgroundColor = "green";
                     // Modifier la couleur du bouton après 1 secondes
                     setTimeout(() => {
                         button.style.backgroundColor = '#007bff';
-                        button.textContent = "Copier le mot de passe";
+                        button.textContent = "Copy password";
                     }, 1000);
                 }
                 catch (error) {
-                    button.textContent = "☓ La copie a échoué";
+                    button.textContent = "☓ Unable to access clibboard";
                     button.style.backgroundColor = "red";
                     // Modifier la couleur du bouton après 2 secondes
                     setTimeout(() => {
                         button.style.backgroundColor = '#007bff';
-                        button.textContent = "Copier le mot de passe";
+                        button.textContent = "Copy password";
                     }, 2000);
                     
                     // ouverture de la fenêtre modale
